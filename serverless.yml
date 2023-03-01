@@ -1,0 +1,32 @@
+service: mongodb-middleware
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-west-1
+  memorySize: 128
+  timeout: 28
+  versionFunctions: false
+  environment:
+    dBURL: ${ssm:/dBURL}
+
+functions:
+  getData:
+    handler: index.getData
+    description: retrieve dataobject matching the id passed to the URL
+    events:
+      - httpApi: 
+          method: get
+          path: /getData
+
+  saveData:
+    handler: index.saveData
+    description: save dataobject passed to the URL
+    events:
+      - httpApi: 
+          method: post
+          path: /saveData
+
+plugins:
+  - serverless-offline
